@@ -137,6 +137,7 @@ public class SMWorldEditListener extends PluginListener {
     @Override
     public boolean onCommand(Player modPlayer, String[] split) {
         WorldEdit worldEdit = WorldEdit.getInstance();
+        WorldEditPlayer player = new SMWorldEditPlayer(modPlayer);
         
         try {
             // Legacy /, command
@@ -146,7 +147,6 @@ public class SMWorldEditListener extends PluginListener {
             
             if (worldEdit.getCommands().containsKey(split[0].toLowerCase())) {
                 if (canUseCommand(modPlayer, split[0])) {
-                    WorldEditPlayer player = new SMWorldEditPlayer(modPlayer);
                     WorldEditSession session = worldEdit.getSession(player);
                     EditSession editSession =
                             new EditSession(session.getBlockChangeLimit());
@@ -162,29 +162,8 @@ public class SMWorldEditListener extends PluginListener {
             }
 
             return false;
-        } catch (NumberFormatException e) {
-            modPlayer.sendMessage(Colors.Rose + "Number expected; string given.");
-        } catch (IncompleteRegionException e2) {
-            modPlayer.sendMessage(Colors.Rose + "The edit region has not been fully defined.");
-        } catch (UnknownItemException e3) {
-            modPlayer.sendMessage(Colors.Rose + "Unknown item.");
-        } catch (DisallowedItemException e4) {
-            modPlayer.sendMessage(Colors.Rose + "Disallowed item.");
-        } catch (MaxChangedBlocksException e5) {
-            modPlayer.sendMessage(Colors.Rose + "The maximum number of blocks changed ("
-                    + e5.getBlockLimit() + ") in an instance was reached.");
-        } catch (UnknownDirectionException ue) {
-            modPlayer.sendMessage(Colors.Rose + "Unknown direction: " + ue.getDirection());
-        } catch (InsufficientArgumentsException e6) {
-            modPlayer.sendMessage(Colors.Rose + e6.getMessage());
-        } catch (EmptyClipboardException ec) {
-            modPlayer.sendMessage(Colors.Rose + "Your clipboard is empty.");
-        } catch (WorldEditException e7) {
-            modPlayer.sendMessage(Colors.Rose + e7.getMessage());
-        } catch (Throwable excp) {
-            modPlayer.sendMessage(Colors.Rose + "Please report this error: [See console]");
-            modPlayer.sendMessage(excp.getClass().getName() + ": " + excp.getMessage());
-            excp.printStackTrace();
+        } catch (Throwable e) {
+            Operation.printException(player, e);
         }
 
         return true;

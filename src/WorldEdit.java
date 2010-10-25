@@ -81,6 +81,10 @@ public class WorldEdit {
      * Stores the snapshot repository. May be null;
      */
     private SnapshotRepository snapshotRepo;
+    /**
+     * Holds operations to run.
+     */
+    private ThreadedOperationHost host = new ThreadedOperationHost();
 
     /**
      * Set up an instance.
@@ -90,6 +94,8 @@ public class WorldEdit {
      */
     public static WorldEdit setup(ServerInterface server) {
         WorldEdit worldEdit = new WorldEdit();
+        Thread opThread = new Thread(worldEdit.host);
+        opThread.start();
         worldEdit.server = server;
         instance = worldEdit;
         return worldEdit;
@@ -294,8 +300,9 @@ public class WorldEdit {
      * @throws InsufficientArgumentsException
      * @throws DisallowedItemException
      */
-    public boolean performCommand(WorldEditPlayer player,
-            WorldEditSession session, EditSession editSession, String[] split)
+    public boolean performCommand(final WorldEditPlayer player,
+            final WorldEditSession session, final EditSession editSession,
+            final String[] split)
             throws WorldEditException
     {
         // Jump to the first free position
@@ -513,22 +520,28 @@ public class WorldEdit {
         } else if (split[0].equalsIgnoreCase("//sphere")
                 || split[0].equalsIgnoreCase("//hsphere")) {
             checkArgs(split, 2, 3, split[0]);
-            BaseBlock block = getBlock(split[1]);
-            int radius = Math.max(1, Integer.parseInt(split[2]));
-            boolean raised = split.length > 3
+            final BaseBlock block = getBlock(split[1]);
+            final int radius = Math.max(1, Integer.parseInt(split[2]));
+            final boolean raised = split.length > 3
                     ? (split[3].equalsIgnoreCase("true")
                             || split[3].equalsIgnoreCase("yes"))
                     : false;
-            boolean filled = split[0].equalsIgnoreCase("//sphere");
+            final boolean filled = split[0].equalsIgnoreCase("//sphere");
 
-            Vector pos = session.getPlacementPosition(player);
+            final Vector pos;
             if (raised) {
-                pos = pos.add(0, radius, 0);
+                pos = session.getPlacementPosition(player).add(0, radius, 0);
+            } else {
+                pos = session.getPlacementPosition(player);
             }
 
-            int affected = editSession.makeSphere(pos, block, radius, filled);
-            player.findFreePosition();
-            player.print(affected + " block(s) have been created.");
+            host.queue(new Operation(player) {
+                public void run() throws Throwable {
+                    int affected = editSession.makeSphere(pos, block, radius, filled);
+                    player.findFreePosition();
+                    player.print(affected + " block(s) have been created.");
+                }
+            });
 
             return true;
 
