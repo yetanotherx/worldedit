@@ -19,13 +19,14 @@
 
 package com.sk89q.worldedit.bukkit;
 
+import com.sk89q.worldedit.threaded.ThreadedOperationState;
 import org.bukkit.*;
 import org.bukkit.entity.CreatureType;
 import com.sk89q.worldedit.ServerInterface;
 
 public class BukkitServerInterface extends ServerInterface {
-    public Server server;
-    public WorldEditPlugin plugin;
+    public final Server server;
+    public final WorldEditPlugin plugin;
     
     public BukkitServerInterface(WorldEditPlugin plugin, Server server) {
         this.plugin = plugin;
@@ -51,6 +52,19 @@ public class BukkitServerInterface extends ServerInterface {
     @Override
     public void reload() {
         plugin.loadConfiguration();
+    }
+
+    public void queueOperation(final ThreadedOperationState state) {
+        Runnable runnable = new Runnable() {
+            public int taskId;
+            public void run() {
+                state.yieldTo();
+                if (state.isDone()) {
+                    plugin.getServer().getScheduler().cancelTasks(plugin);
+                }
+            }
+        };
+        int taskId = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, runnable, 5, 5);
     }
 
 }

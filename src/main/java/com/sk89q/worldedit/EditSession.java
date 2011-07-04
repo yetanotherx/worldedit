@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import com.sk89q.worldedit.regions.*;
+import com.sk89q.worldedit.threaded.ThreadedOperationState;
 import com.sk89q.worldedit.util.TreeGenerator;
 import com.sk89q.worldedit.bags.*;
 import com.sk89q.worldedit.blocks.*;
@@ -56,6 +57,8 @@ public class EditSession {
      * World.
      */
     protected LocalWorld world;
+
+    private ThreadedOperationState threadState;
 
     /**
      * Stores the original blocks before modification.
@@ -99,6 +102,11 @@ public class EditSession {
      * Use the fast mode, which may leave chunks not flagged "dirty".
      */
     private boolean fastMode = false;
+
+    /**
+     * Used to group operations into batches.
+     */
+    private int numBlocksSet;
     
     /**
      * Block bag to use for getting blocks.
@@ -156,6 +164,13 @@ public class EditSession {
      * @return Whether the block changed
      */
     public boolean rawSetBlock(Vector pt, BaseBlock block) {
+        if (threadState != null) {
+            numBlocksSet++;
+            if (numBlocksSet % 10000 == 0) {
+                threadState.yield();
+            }
+        }
+
         int y = pt.getBlockY();
         int type = block.getType();
         
@@ -2274,5 +2289,16 @@ public class EditSession {
      */
     public void setMask(Mask mask) {
         this.mask = mask;
+    }
+
+    /**
+     * Used to "thread" operations.
+     */
+    public ThreadedOperationState getThreadState() {
+        return threadState;
+    }
+
+    public void setThreadState(ThreadedOperationState threadState) {
+        this.threadState = threadState;
     }
 }

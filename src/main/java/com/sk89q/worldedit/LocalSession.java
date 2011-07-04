@@ -656,14 +656,14 @@ public class LocalSession {
      */
     public EditSession createEditSession(LocalPlayer player) {
         BlockBag blockBag = getBlockBag(player);
-        
+
         // Create an edit session
         EditSession editSession =
                 new EditSession(player.getWorld(),
                         getBlockChangeLimit(), blockBag);
         editSession.setFastMode(fastMode);
         editSession.setMask(mask);
-        
+
         return editSession;
     }
 

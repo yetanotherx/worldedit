@@ -19,6 +19,8 @@
 
 package com.sk89q.worldedit;
 
+import com.sk89q.worldedit.threaded.ThreadedOperationState;
+
 /**
  * 
  * @author sk89q
@@ -54,4 +56,6 @@ public abstract class ServerInterface {
      * Reload WorldEdit configuration.
      */
     public abstract void reload();
+
+    public abstract void queueOperation(ThreadedOperationState state);
 }
