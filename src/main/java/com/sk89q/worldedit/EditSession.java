@@ -158,7 +158,7 @@ public class EditSession {
         int y = pt.getBlockY();
         int type = block.getType();
 
-        if (y < 0 || y > 127) {
+        if (y < 0 || y > world.getHeight()) {
             return false;
         }
 
@@ -801,7 +801,7 @@ public class EditSession {
      */
     public int removeAbove(Vector pos, int size, int height)
             throws MaxChangedBlocksException {
-        int maxY = Math.min(127, pos.getBlockY() + height - 1);
+        int maxY = Math.min(world.getHeight(), pos.getBlockY() + height - 1);
         --size;
         int affected = 0;
 
@@ -877,7 +877,7 @@ public class EditSession {
         int minX = pos.getBlockX() - size;
         int maxX = pos.getBlockX() + size;
         int minY = Math.max(0, pos.getBlockY() - size);
-        int maxY = Math.min(127, pos.getBlockY() + size);
+        int maxY = Math.min(world.getHeight(), pos.getBlockY() + size);
         int minZ = pos.getBlockZ() - size;
         int maxZ = pos.getBlockZ() + size;
 
@@ -1341,7 +1341,7 @@ public class EditSession {
         Vector min = region.getMinimumPoint();
         Vector max = region.getMaximumPoint();
 
-        int upperY = Math.min(127, max.getBlockY() + 1);
+        int upperY = Math.min(world.getHeight(), max.getBlockY() + 1);
         int lowerY = Math.max(0, min.getBlockY() - 1);
 
         int affected = 0;
@@ -1356,7 +1356,7 @@ public class EditSession {
                 for (int y = upperY; y >= lowerY; --y) {
                     Vector above = new Vector(x, y + 1, z);
 
-                    if (y + 1 <= 127 && !getBlock(new Vector(x, y, z)).isAir()
+                    if (y + 1 <= world.getHeight() && !getBlock(new Vector(x, y, z)).isAir()
                             && getBlock(above).isAir()) {
                         if (setBlock(above, block)) {
                             ++affected;
@@ -1383,7 +1383,7 @@ public class EditSession {
         Vector min = region.getMinimumPoint();
         Vector max = region.getMaximumPoint();
 
-        int upperY = Math.min(127, max.getBlockY() + 1);
+        int upperY = Math.min(world.getHeight(), max.getBlockY() + 1);
         int lowerY = Math.max(0, min.getBlockY() - 1);
 
         int affected = 0;
@@ -1398,7 +1398,7 @@ public class EditSession {
                 for (int y = upperY; y >= lowerY; --y) {
                     Vector above = new Vector(x, y + 1, z);
 
-                    if (y + 1 <= 127 && !getBlock(new Vector(x, y, z)).isAir()
+                    if (y + 1 <= world.getHeight() && !getBlock(new Vector(x, y, z)).isAir()
                             && getBlock(above).isAir()) {
                         if (setBlock(above, pattern.next(above))) {
                             ++affected;
@@ -1425,7 +1425,7 @@ public class EditSession {
         Vector min = region.getMinimumPoint();
         Vector max = region.getMaximumPoint();
 
-        int upperY = Math.min(127, max.getBlockY() + 1);
+        int upperY = Math.min(world.getHeight(), max.getBlockY() + 1);
         int lowerY = Math.max(0, min.getBlockY() - 1);
 
         int affected = 0;
@@ -1809,8 +1809,8 @@ public class EditSession {
         // Only do this check if height is negative --Elizabeth
         if (height < 0 && pos.getBlockY() - height - 1 < 0) {
             height = pos.getBlockY() + 1;
-        } else if (pos.getBlockY() + height - 1 > 127) {
-            height = 127 - pos.getBlockY() + 1;
+        } else if (pos.getBlockY() + height - 1 > world.getHeight()) {
+            height = world.getHeight() - pos.getBlockY() + 1;
         }
 
         affected += makeHCylinderPoints(pos, x, z, height, block);
@@ -1896,8 +1896,8 @@ public class EditSession {
 
         if (pos.getBlockY() - height - 1 < 0) {
             height = pos.getBlockY() + 1;
-        } else if (pos.getBlockY() + height - 1 > 127) {
-            height = 127 - pos.getBlockY() + 1;
+        } else if (pos.getBlockY() + height - 1 > world.getHeight()) {
+            height = world.getHeight() - pos.getBlockY() + 1;
         }
 
         affected += makeCylinderPoints(pos, x, z, height, block);
@@ -2057,7 +2057,7 @@ public class EditSession {
                     continue;
                 }
 
-                for (int y = 127; y >= 1; --y) {
+                for (int y = world.getHeight(); y >= 1; --y) {
                     Vector pt = new Vector(x, y, z);
                     int id = getBlockType(pt);
 
@@ -2106,7 +2106,7 @@ public class EditSession {
                     continue;
                 }
 
-                for (int y = 127; y >= 1; --y) {
+                for (int y = world.getHeight(); y >= 1; --y) {
                     Vector pt = new Vector(x, y, z);
                     int id = getBlockType(pt);
 
@@ -2147,7 +2147,7 @@ public class EditSession {
 
                     // Cover
                     if (id != 0) {
-                        if (y == 127) { // Too high!
+                        if (y == world.getHeight()) { // Too high!
                             break;
                         }
 
@@ -2225,7 +2225,7 @@ public class EditSession {
                     continue;
                 }
 
-                for (int y = 127; y >= 1; --y) {
+                for (int y = world.getHeight(); y >= 1; --y) {
                     Vector pt = new Vector(x, y, z);
                     int id = getBlockType(pt);
 

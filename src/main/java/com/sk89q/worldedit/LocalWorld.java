@@ -365,4 +365,11 @@ public abstract class LocalWorld {
      */
     @Override
     public abstract int hashCode();
+    
+    /**
+     * World height
+     * 
+     * @return Default is 127
+     */
+    public abstract int getHeight();
 }
