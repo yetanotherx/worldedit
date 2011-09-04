@@ -152,24 +152,24 @@ public class ClipboardCommands {
     }
 
     @Command(
-        aliases = {"/flip"},
+        aliases = { "/mirror", "/flip"},
         usage = "[dir]",
         flags = "p",
-        desc = "Flip the contents of the clipboard. To flip it around yourself, use the -p flag.",
+        desc = "Mirror the contents of the clipboard. To mirror it around yourself, use the -p flag.",
         min = 0,
         max = 1
     )
-    @CommandPermissions({"worldedit.clipboard.flip"})
-    public static void flip(CommandContext args, WorldEdit we,
+    @CommandPermissions({"worldedit.clipboard.mirror"})
+    public static void mirror(CommandContext args, WorldEdit we,
             LocalSession session, LocalPlayer player, EditSession editSession)
             throws WorldEditException {
 
-        CuboidClipboard.FlipDirection dir = we.getFlipDirection(player,
+        CuboidClipboard.MirrorDirection dir = we.getMirrorDirection(player,
                 args.argsLength() > 0 ? args.getString(0).toLowerCase() : "me");
 
         CuboidClipboard clipboard = session.getClipboard();
-        clipboard.flip(dir, args.hasFlag('p'));
-        player.print("Clipboard flipped.");
+        clipboard.mirror(dir, args.hasFlag('p'));
+        player.print("Clipboard mirrored.");
     }
     
     @Command(

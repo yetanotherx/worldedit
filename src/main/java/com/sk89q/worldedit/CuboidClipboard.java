@@ -36,9 +36,9 @@ import java.util.zip.GZIPInputStream;
  */
 public class CuboidClipboard {
     /**
-     * Flip direction.
+     * Mirror direction.
      */
-    public enum FlipDirection {
+    public enum MirrorDirection {
         NORTH_SOUTH,
         WEST_EAST,
         UP_DOWN
@@ -171,21 +171,21 @@ public class CuboidClipboard {
     }
 
     /**
-     * Flip the clipboard.
+     * Mirror the clipboard.
      * 
-     * @param dir direction to flip
+     * @param dir direction to mirror
      */
-    public void flip(FlipDirection dir) {
-        flip(dir, false);
+    public void mirror(MirrorDirection dir) {
+        mirror(dir, false);
     }
 
     /**
-     * Flip the clipboard.
+     * Mirror the clipboard.
      *
-     * @param dir direction to flip
-     * @param aroundPlayer flip the offset around the player
+     * @param dir direction to mirror
+     * @param aroundPlayer mirror the offset around the player
      */
-    public void flip(FlipDirection dir, boolean aroundPlayer) {
+    public void mirror(MirrorDirection dir, boolean aroundPlayer) {
         final int width = getWidth();
         final int length = getLength();
         final int height = getHeight();
@@ -196,9 +196,9 @@ public class CuboidClipboard {
             for (int xs = 0; xs < wid; ++xs) {
                 for (int z = 0; z < length; ++z) {
                     for (int y = 0; y < height; ++y) {
-                        BaseBlock old = data[xs][y][z].flip(dir);
+                        BaseBlock old = data[xs][y][z].mirror(dir);
                         if (xs == width - xs - 1) continue;
-                        data[xs][y][z] = data[width - xs - 1][y][z].flip(dir);
+                        data[xs][y][z] = data[width - xs - 1][y][z].mirror(dir);
                         data[width - xs - 1][y][z] = old;
                     }
                 }
@@ -215,9 +215,9 @@ public class CuboidClipboard {
             for (int zs = 0; zs < len; ++zs) {
                 for (int x = 0; x < width; ++x) {
                     for (int y = 0; y < height; ++y) {
-                        BaseBlock old = data[x][y][zs].flip(dir);
+                        BaseBlock old = data[x][y][zs].mirror(dir);
                         if (zs == length - zs - 1) continue;
-                        data[x][y][zs] = data[x][y][length - zs - 1].flip(dir);
+                        data[x][y][zs] = data[x][y][length - zs - 1].mirror(dir);
                         data[x][y][length - zs - 1] = old;
                     }
                 }
@@ -234,9 +234,9 @@ public class CuboidClipboard {
             for (int ys = 0; ys < hei; ++ys) {
                 for (int x = 0; x < width; ++x) {
                     for (int z = 0; z < length; ++z) {
-                        BaseBlock old = data[x][ys][z].flip(dir);
+                        BaseBlock old = data[x][ys][z].mirror(dir);
                         if (ys == height - ys - 1) continue;
-                        data[x][ys][z] = data[x][height - ys - 1][z].flip(dir);
+                        data[x][ys][z] = data[x][height - ys - 1][z].mirror(dir);
                         data[x][height - ys - 1][z] = old;
                     }
                 }

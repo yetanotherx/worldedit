@@ -19,7 +19,7 @@
 
 package com.sk89q.worldedit.blocks;
 
-import com.sk89q.worldedit.CuboidClipboard.FlipDirection;
+import com.sk89q.worldedit.CuboidClipboard.MirrorDirection;
 import com.sk89q.worldedit.data.BlockData;
 
 /**
@@ -109,18 +109,18 @@ public class BaseBlock {
     }
     
     /**
-     * Flip this block.
+     * Rotate this block by 180 degrees.
      */
-    public BaseBlock flip() {
-        data = (byte) BlockData.flip(type, data);
+    public BaseBlock rotate180() {
+        data = (byte) BlockData.rotate180(type, data);
         return this;
     }
     /**
-     * Flip this block.
+     * Mirror this block.
      * @param direction
      */
-    public BaseBlock flip(FlipDirection direction) {
-        data = (byte) BlockData.flip(type, data, direction);
+    public BaseBlock mirror(MirrorDirection direction) {
+        data = (byte) BlockData.mirror(type, data, direction);
         return this;
     }
 

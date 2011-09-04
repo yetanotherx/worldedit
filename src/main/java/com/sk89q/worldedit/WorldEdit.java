@@ -848,14 +848,14 @@ public class WorldEdit {
     }
 
     /**
-     * Get the flip direction for a player's direction.
+     * Get the mirror direction for a player's direction.
      *
      * @param player
      * @param dirStr 
      * @return
      * @throws UnknownDirectionException 
      */
-    public CuboidClipboard.FlipDirection getFlipDirection(
+    public CuboidClipboard.MirrorDirection getMirrorDirection(
             LocalPlayer player, String dirStr)
             throws UnknownDirectionException {
         
@@ -864,15 +864,15 @@ public class WorldEdit {
             switch (dir) {
             case WEST:
             case EAST:
-                return CuboidClipboard.FlipDirection.WEST_EAST;
+                return CuboidClipboard.MirrorDirection.WEST_EAST;
 
             case NORTH:
             case SOUTH:
-                return CuboidClipboard.FlipDirection.NORTH_SOUTH;
+                return CuboidClipboard.MirrorDirection.NORTH_SOUTH;
 
             case UP:
             case DOWN:
-                return CuboidClipboard.FlipDirection.UP_DOWN;
+                return CuboidClipboard.MirrorDirection.UP_DOWN;
 
             default:
                 throw new UnknownDirectionException(dir.name());
@@ -882,15 +882,15 @@ public class WorldEdit {
         switch (dirStr.charAt(0)) {
         case 'w':
         case 'e':
-            return CuboidClipboard.FlipDirection.WEST_EAST;
+            return CuboidClipboard.MirrorDirection.WEST_EAST;
 
         case 'n':
         case 's':
-            return CuboidClipboard.FlipDirection.NORTH_SOUTH;
+            return CuboidClipboard.MirrorDirection.NORTH_SOUTH;
 
         case 'u':
         case 'd':
-            return CuboidClipboard.FlipDirection.UP_DOWN;
+            return CuboidClipboard.MirrorDirection.UP_DOWN;
 
         default:
             throw new UnknownDirectionException(dirStr);
