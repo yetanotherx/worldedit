@@ -22,6 +22,8 @@ package com.sk89q.worldedit.tools;
 import com.sk89q.worldedit.*;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.blocks.BlockID;
+import com.sk89q.worldedit.events.WorldEditBlockBreakEvent;
+import com.sk89q.worldedit.events.WorldEditBlockCreateEvent;
 
 /**
  * A tool that can place (or remove) blocks at a distance.
@@ -51,9 +53,13 @@ public class LongRangeBuildTool extends BrushTool implements DoubleActionTraceTo
         EditSession eS = session.createEditSession(player);
         try {
             if (secondary.getType() == BlockID.AIR) {
-                eS.setBlock(pos, secondary);
+                if (server.callEvent(player, new WorldEditBlockBreakEvent(pos, server.controller, session))) {
+                    eS.setBlock(pos, secondary);
+                }
             } else {
-                eS.setBlock(pos.getFaceVector(), secondary);
+                if (server.callEvent(player, new WorldEditBlockCreateEvent(pos.getFaceVector(), pos, secondary, server.controller, session))) {
+                    eS.setBlock(pos.getFaceVector(), secondary);
+                }
             }
             return true;
         } catch (MaxChangedBlocksException e) {
@@ -72,9 +78,13 @@ public class LongRangeBuildTool extends BrushTool implements DoubleActionTraceTo
         EditSession eS = session.createEditSession(player);
         try {
             if (primary.getType() == BlockID.AIR) {
-                eS.setBlock(pos, primary);
+                if (server.callEvent(player, new WorldEditBlockBreakEvent(pos, server.controller, session))) {
+                    eS.setBlock(pos, primary);
+                }
             } else {
-                eS.setBlock(pos.getFaceVector(), primary);
+                if (server.callEvent(player, new WorldEditBlockCreateEvent(pos.getFaceVector(), pos, primary, server.controller, session))) {
+                    eS.setBlock(pos.getFaceVector(), primary);
+                }
             }
             return true;
         } catch (MaxChangedBlocksException e) {

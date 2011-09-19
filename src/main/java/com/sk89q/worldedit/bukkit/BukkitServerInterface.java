@@ -21,13 +21,18 @@ package com.sk89q.worldedit.bukkit;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 
 import com.sk89q.worldedit.LocalPlayer;
 import com.sk89q.worldedit.ServerInterface;
 import com.sk89q.worldedit.Vector;
+import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.events.WEBlockBreakEvent;
+import com.sk89q.worldedit.bukkit.events.WEBlockCreateEvent;
+import com.sk89q.worldedit.events.WorldEditBlockBreakEvent;
+import com.sk89q.worldedit.events.WorldEditBlockCreateEvent;
 import com.sk89q.worldedit.events.WorldEditBlockEvent;
 import com.sk89q.worldedit.events.WorldEditEvent;
 
@@ -60,13 +65,25 @@ public class BukkitServerInterface extends ServerInterface {
     public boolean callEvent(LocalPlayer lPlayer, WorldEditEvent event) {
         switch (event.getType()) {
         case BLOCK_DESTROY:
-            WorldEditBlockEvent blockEvent = (WorldEditBlockEvent) event;
-            Vector pt = blockEvent.getVector();
-            Player player = server.getPlayer(lPlayer.getName());
-            Block block = player.getWorld().getBlockAt(pt.getBlockX(), pt.getBlockY(), pt.getBlockZ());
-            WEBlockBreakEvent bEvent = new WEBlockBreakEvent(block, player, blockEvent);
-            server.getPluginManager().callEvent(bEvent);
-            return bEvent.isCancelled();
+            WorldEditBlockBreakEvent destroyEvent = (WorldEditBlockBreakEvent) event;
+            Vector dest = destroyEvent.getVector();
+            Player destroyer = server.getPlayer(lPlayer.getName());
+            Block destroyedBlock = destroyer.getWorld().getBlockAt(dest.getBlockX(), dest.getBlockY(), dest.getBlockZ());
+            WEBlockBreakEvent bBEvent = new WEBlockBreakEvent(destroyedBlock, destroyer, destroyEvent);
+            server.getPluginManager().callEvent(bBEvent);
+            return bBEvent.isCancelled();
+        case BLOCK_CREATE:
+            WorldEditBlockCreateEvent createEvent = (WorldEditBlockCreateEvent) event;
+            BaseBlock replacing = createEvent.getNewBlock();
+            Vector placed = createEvent.getVector();
+            Vector placedAdj = createEvent.getAdjacent();
+            Player creator = server.getPlayer(lPlayer.getName());
+            Block placedBlock = creator.getWorld().getBlockAt(placed.getBlockX(), placed.getBlockY(), placed.getBlockZ());
+            Block placedOn = creator.getWorld().getBlockAt(placedAdj.getBlockX(), placedAdj.getBlockY(), placedAdj.getBlockZ());
+            BlockState replacedBlock = placedBlock.getState();
+            replacedBlock.setData(Material.getMaterial(replacing.getType()).getNewData((byte) replacing.getData()));
+            WEBlockCreateEvent bCEvent = new WEBlockCreateEvent(placedBlock, replacedBlock, placedOn, creator, createEvent);
+            return bCEvent.isCancelled();
         default:
             throw new UnsupportedOperationException();
         }

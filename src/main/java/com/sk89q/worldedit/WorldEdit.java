@@ -99,6 +99,7 @@ public class WorldEdit {
     public WorldEdit(ServerInterface server, final LocalConfiguration config) {
         this.server = server;
         this.config = config;
+        server.controller = this;
         
         commands = new CommandsManager<LocalPlayer>() {
             @Override

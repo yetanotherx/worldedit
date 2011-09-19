@@ -19,7 +19,6 @@
 
 package com.sk89q.worldedit;
 
-import com.sk89q.worldedit.events.WorldEditBlockBreakEvent;
 import com.sk89q.worldedit.events.WorldEditEvent;
 
 /**
@@ -27,6 +26,9 @@ import com.sk89q.worldedit.events.WorldEditEvent;
  * @author sk89q
  */
 public abstract class ServerInterface {
+
+    public WorldEdit controller;
+
     /**
      * Resolves an item name to its ID.
      * 
