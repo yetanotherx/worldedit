@@ -11,9 +11,9 @@ public class WorldEditRegionEvent implements WorldEditEvent {
     protected WorldEdit we;
     protected EditSession editSession;
     protected LocalSession localSession;
-    protected WorldEditEvent.Type type;
+    protected EventType type;
 
-    public WorldEditRegionEvent(Type type, Region region, WorldEdit we, EditSession eS, LocalSession lS) {
+    public WorldEditRegionEvent(EventType type, Region region, WorldEdit we, EditSession eS, LocalSession lS) {
         this.type = type;
         this.region = region;
         this.we = we;
@@ -37,7 +37,7 @@ public class WorldEditRegionEvent implements WorldEditEvent {
         return localSession;
     }
 
-    public Type getType() {
+    public EventType getType() {
         return type;
     }
 }

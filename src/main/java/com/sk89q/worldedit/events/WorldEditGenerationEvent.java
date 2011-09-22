@@ -13,9 +13,9 @@ public class WorldEditGenerationEvent implements WorldEditEvent {
     protected WorldEdit we;
     protected EditSession editSession;
     protected LocalSession localSession;
-    protected WorldEditEvent.Type type;
+    protected EventType type;
 
-    public WorldEditGenerationEvent(Type type, Set<Vector> blocks, WorldEdit we, EditSession eS, LocalSession lS) {
+    public WorldEditGenerationEvent(EventType type, Set<Vector> blocks, WorldEdit we, EditSession eS, LocalSession lS) {
         this.type = type;
         this.blocks = blocks;
         this.we = we;
@@ -39,7 +39,7 @@ public class WorldEditGenerationEvent implements WorldEditEvent {
         return localSession;
     }
 
-    public Type getType() {
+    public EventType getType() {
         return type;
     }
 }

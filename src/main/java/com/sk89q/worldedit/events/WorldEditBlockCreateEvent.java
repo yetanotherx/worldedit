@@ -23,7 +23,7 @@ public class WorldEditBlockCreateEvent extends WorldEditBlockEvent {
     }
 
     public WorldEditBlockCreateEvent(Vector vector, Vector placedOn, BaseBlock newBlock, WorldEdit we, LocalSession lS) {
-        super(Type.BLOCK_CREATE, vector, we, lS);
+        super(EventType.BLOCK_CREATE, vector, we, lS);
         this.newBlock = newBlock;
         this.adj = placedOn;
     }

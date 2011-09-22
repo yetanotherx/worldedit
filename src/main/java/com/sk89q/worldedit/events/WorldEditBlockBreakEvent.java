@@ -7,7 +7,7 @@ import com.sk89q.worldedit.WorldEdit;
 public class WorldEditBlockBreakEvent extends WorldEditBlockEvent {
 
     public WorldEditBlockBreakEvent(Vector vector, WorldEdit we, LocalSession lS) {
-        super(Type.BLOCK_DESTROY, vector, we, lS);
+        super(EventType.BLOCK_DESTROY, vector, we, lS);
     }
 
 }

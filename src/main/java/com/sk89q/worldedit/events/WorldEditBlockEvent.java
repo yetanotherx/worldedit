@@ -10,9 +10,9 @@ public class WorldEditBlockEvent implements WorldEditEvent {
     protected LocalSession localSession;
     protected Vector vector;
     protected boolean cancelled;
-    protected WorldEditEvent.Type type;
+    protected EventType type;
 
-    public WorldEditBlockEvent(Type type, Vector vector, WorldEdit we, LocalSession lS) {
+    public WorldEditBlockEvent(EventType type, Vector vector, WorldEdit we, LocalSession lS) {
         this.type = type;
         this.vector = vector;
         this.we = we;
@@ -39,7 +39,7 @@ public class WorldEditBlockEvent implements WorldEditEvent {
         cancelled = cancel;
     }
 
-    public Type getType() {
+    public EventType getType() {
         return type;
     }
 

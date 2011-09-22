@@ -5,13 +5,6 @@ import com.sk89q.worldedit.WorldEdit;
 
 public interface WorldEditEvent {
 
-    public enum Type {
-        BLOCK_DESTROY,
-        BLOCK_CREATE,
-        REGION,
-        GENERATE;
-    }
-
     /**
      * Get the WorldEdit API from the plugin throwing the event.
      */
@@ -21,5 +14,5 @@ public interface WorldEditEvent {
      * Get the type of event.
      * @return
      */
-    public Type getType();
+    public EventType getType();
 }
