@@ -8,7 +8,6 @@
   <groupId>com.sk89q</groupId>
   <artifactId>worldedit</artifactId>
   <version>4.8-SNAPSHOT</version>
-  <name>WorldEdit</name>
   <description>WorldEdit allows for editing the Minecraft SMP world
     en-masse, de-griefing, and fixing issues.</description>
   <properties>
@@ -41,7 +40,7 @@
     <dependency>
       <groupId>org.bukkit</groupId>
       <artifactId>bukkit</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>1.0.0-R1-SNAPSHOT</version>
     </dependency>
 
     <!-- Archive reading library for snapshots -->
@@ -169,4 +168,5 @@
       </plugin>
     </plugins>
   </build>
+    <name>CUIx plugin</name>
 </project>
