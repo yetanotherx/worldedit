@@ -567,7 +567,7 @@ public class LocalSession {
     public void dispatchCUISetup(LocalPlayer player) {
         if (selector != null) {
             dispatchCUISelection(player);
-            dispatchCUIWEVersion(player);
+            dispatchCUIMetadata(player);
         }
     }
 
@@ -577,23 +577,16 @@ public class LocalSession {
      * @param player
      */
     public void dispatchCUISelection(LocalPlayer player) {
-        try {
-            
-            if (!hasCUISupport) {
-                return;
-            }
-            
-            String data = Base64.encodeToString(controller.getSerializedCommands(), false);
-            player.dispatchCUIMultiEvent(new TooltipEvent(data));
-
-            player.dispatchCUIEvent(new SelectionShapeEvent(selector.getTypeId()));
-
-            if (selector instanceof CUIPointBasedRegion) {
-                ((CUIPointBasedRegion) selector).describeCUI(player);
-            }
-            
-        } catch (IOException ex) {
+        if (!hasCUISupport) {
+            return;
         }
+
+        player.dispatchCUIEvent(new SelectionShapeEvent(selector.getTypeId()));
+
+        if (selector instanceof CUIPointBasedRegion) {
+            ((CUIPointBasedRegion) selector).describeCUI(player);
+        }
+        
     }
     
     /**
@@ -601,13 +594,19 @@ public class LocalSession {
      *
      * @param player
      */
-    public void dispatchCUIWEVersion(LocalPlayer player) {
-        if (!hasCUISupport) {
-            return;
-        }
+    public void dispatchCUIMetadata(LocalPlayer player) {
+        try {
+            if (!hasCUISupport) {
+                return;
+            }
+            
+            String data = Base64.encodeToString(controller.getSerializedCommands(), false);
+            player.dispatchCUIMultiEvent(new TooltipEvent(data));
 
-        player.dispatchCUIEvent(new UpdateEvent());
-        player.dispatchCUIEvent(new VersionEvent(WorldEdit.getVersion()));
+            player.dispatchCUIEvent(new UpdateEvent());
+            player.dispatchCUIEvent(new VersionEvent(WorldEdit.getVersion()));
+        } catch (IOException ex) {
+        }
 
     }
 
