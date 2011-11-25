@@ -127,11 +127,8 @@ public class BukkitPlayer extends LocalPlayer {
         if (params.length > 0) {
             player.sendRawMessage(header + event.getTypeId()
                     + "|" + StringUtil.joinString(params, "|"));
-            System.out.println(header + event.getTypeId()
-                    + "|" + StringUtil.joinString(params, "|"));
         } else {
             player.sendRawMessage(header + event.getTypeId());
-            System.out.println(header + event.getTypeId());
         }
     }
 
