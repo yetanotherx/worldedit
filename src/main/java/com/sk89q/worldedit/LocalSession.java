@@ -19,6 +19,7 @@
 
 package com.sk89q.worldedit;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -37,12 +38,16 @@ import com.sk89q.worldedit.bags.BlockBag;
 import com.sk89q.worldedit.cui.CUIPointBasedRegion;
 import com.sk89q.worldedit.cui.CUIEvent;
 import com.sk89q.worldedit.cui.SelectionShapeEvent;
+import com.sk89q.worldedit.cui.TooltipEvent;
 import com.sk89q.worldedit.cui.UpdateEvent;
 import com.sk89q.worldedit.cui.VersionEvent;
 import com.sk89q.worldedit.masks.Mask;
 import com.sk89q.worldedit.regions.CuboidRegionSelector;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
+import com.sk89q.worldedit.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * An instance of this represents the WorldEdit session of a user. A session
@@ -55,6 +60,7 @@ public class LocalSession {
     public static int MAX_HISTORY_SIZE = 15;
     public static int EXPIRATION_GRACE = 600000;
 
+    private WorldEdit controller;
     private LocalConfiguration config;
 
     private long expirationTime = 0;
@@ -84,8 +90,9 @@ public class LocalSession {
      *
      * @param config
      */
-    public LocalSession(LocalConfiguration config) {
-        this.config = config;
+    public LocalSession(WorldEdit controller) {
+        this.controller = controller;
+        this.config = controller.getConfiguration();
     }
 
     /**
@@ -570,14 +577,22 @@ public class LocalSession {
      * @param player
      */
     public void dispatchCUISelection(LocalPlayer player) {
-        if (!hasCUISupport) {
-            return;
-        }
+        try {
+            
+            if (!hasCUISupport) {
+                return;
+            }
+            
+            String data = Base64.encodeToString(controller.getSerializedCommands(), false);
+            player.dispatchCUIMultiEvent(new TooltipEvent(data));
 
-        player.dispatchCUIEvent(new SelectionShapeEvent(selector.getTypeId()));
+            player.dispatchCUIEvent(new SelectionShapeEvent(selector.getTypeId()));
 
-        if (selector instanceof CUIPointBasedRegion) {
-            ((CUIPointBasedRegion) selector).describeCUI(player);
+            if (selector instanceof CUIPointBasedRegion) {
+                ((CUIPointBasedRegion) selector).describeCUI(player);
+            }
+            
+        } catch (IOException ex) {
         }
     }
     

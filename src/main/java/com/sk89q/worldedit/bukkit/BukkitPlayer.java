@@ -19,6 +19,7 @@
 
 package com.sk89q.worldedit.bukkit;
 
+import com.sk89q.worldedit.cui.MultiMessageEvent;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +31,7 @@ import com.sk89q.worldedit.cui.CUIEvent;
 public class BukkitPlayer extends LocalPlayer {
     private Player player;
     private WorldEditPlugin plugin;
+    private static String header = "\u00A75\u00A76\u00A74\u00A75";
     
     public BukkitPlayer(WorldEditPlugin plugin, ServerInterface server, Player player) {
         super(server);
@@ -123,19 +125,32 @@ public class BukkitPlayer extends LocalPlayer {
         String[] params = event.getParameters();
         
         if (params.length > 0) {
-            player.sendRawMessage("\u00A75\u00A76\u00A74\u00A75" + event.getTypeId()
+            player.sendRawMessage(header + event.getTypeId()
+                    + "|" + StringUtil.joinString(params, "|"));
+            System.out.println(header + event.getTypeId()
                     + "|" + StringUtil.joinString(params, "|"));
         } else {
-            player.sendRawMessage("\u00A75\u00A76\u00A74\u00A75" + event.getTypeId());
+            player.sendRawMessage(header + event.getTypeId());
+            System.out.println(header + event.getTypeId());
+        }
+    }
+
+    @Override
+    public void dispatchCUIMultiEvent(MultiMessageEvent event) {
+        int size = event.getSplitData().length;
+        for( int i = -1; i < size; i++ ) {
+            event.setPointer(i);
+            this.dispatchCUIEvent(event);
         }
     }
     
     @Override
     public void dispatchCUIHandshake() {
-        player.sendRawMessage("\u00A75\u00A76\u00A74\u00A75");
+        player.sendRawMessage(header);
     }
 
     public Player getPlayer() {
         return player;
     }
+    
 }

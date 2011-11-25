@@ -19,6 +19,7 @@
 
 package com.sk89q.minecraft.util.commands;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -27,6 +28,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.sk89q.util.StringUtil;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 
 /**
  * <p>Manager for handling commands. This allows you to easily process commands,
@@ -88,6 +91,11 @@ public abstract class CommandsManager<T> {
      * Stores the injector used to getInstance.
      */
     protected Injector injector;
+    
+    /**
+     * Stores a serialized Map<String, String> of root objects
+     */
+    private byte[] serializedDescs;
     
     /**
      * Register an class that contains commands (denoted by {@link Command}.
@@ -233,6 +241,25 @@ public abstract class CommandsManager<T> {
      */
     public Map<String, String> getCommands() {
         return descs;
+    }
+    
+    /**
+     * Get a list of command descriptions, but serialized. This is only for root commands.
+     * 
+     * @return
+     */
+    public byte[] getSerializedCommands() throws IOException {
+        if( serializedDescs == null ) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream() ;
+            ObjectOutputStream out = new ObjectOutputStream(baos);
+            out.writeObject(this.getCommands());
+            out.close();
+        
+            serializedDescs = baos.toByteArray();
+            baos.close();
+        }
+        
+        return serializedDescs;
     }
     
     /**

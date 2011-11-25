@@ -25,6 +25,7 @@ import com.sk89q.worldedit.blocks.BlockID;
 import com.sk89q.worldedit.blocks.BlockType;
 import com.sk89q.worldedit.blocks.ItemID;
 import com.sk89q.worldedit.cui.CUIEvent;
+import com.sk89q.worldedit.cui.MultiMessageEvent;
 import com.sk89q.worldedit.util.TargetBlock;
 
 /**
@@ -618,6 +619,14 @@ public abstract class LocalPlayer {
      * @param event
      */
     public void dispatchCUIEvent(CUIEvent event) {
+    }
+    
+    /**
+     * Send a CUI event comprised of many parts
+     *
+     * @param event
+     */
+    public void dispatchCUIMultiEvent(MultiMessageEvent event) {
     }
 
     /**

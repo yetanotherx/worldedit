@@ -200,7 +200,7 @@ public class WorldEdit {
                 return sessions.get(player.getName());
             }
             
-            session = new LocalSession(config);
+            session = new LocalSession(this);
             
             // Set the limit on the number of blocks that an operation can
             // change at once, or don't if the player has an override or there
@@ -971,6 +971,13 @@ public class WorldEdit {
      */
     public Map<String, String> getCommands() {
         return commands.getCommands();
+    }
+    
+    /**
+     * @return the commands in a serialized byte array
+     */
+    public byte[] getSerializedCommands() throws IOException {
+        return commands.getSerializedCommands();
     }
     
     /**
