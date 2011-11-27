@@ -46,8 +46,6 @@ import com.sk89q.worldedit.regions.CuboidRegionSelector;
 import com.sk89q.worldedit.regions.Region;
 import com.sk89q.worldedit.regions.RegionSelector;
 import com.sk89q.worldedit.util.Base64;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * An instance of this represents the WorldEdit session of a user. A session
@@ -58,6 +56,7 @@ import java.util.logging.Logger;
  */
 public class LocalSession {
     public static int MAX_HISTORY_SIZE = 15;
+    public static int MAX_QUEUE_SIZE = 10;
     public static int EXPIRATION_GRACE = 600000;
 
     private WorldEdit controller;
@@ -83,6 +82,9 @@ public class LocalSession {
     private boolean fastMode = false;
     private Mask mask;
     private TimeZone timezone = TimeZone.getDefault();
+    private LinkedList<String[]> commandQueue = new LinkedList<String[]>();
+    private int commandQueuePointer = 0;
+    private boolean previewMode = false;
     //private Boolean jumptoBlock = true;
 
     /**
@@ -120,6 +122,14 @@ public class LocalSession {
         history.clear();
         historyPointer = 0;
     }
+    
+    /**
+     * Clear command queue.
+     */
+    public void clearCommandQueue() {
+        commandQueue.clear();
+        commandQueuePointer = 0;
+    }
 
     /**
      * Remember an edit session for the undo history. If the history maximum
@@ -140,6 +150,31 @@ public class LocalSession {
             history.remove(0);
         }
         historyPointer = history.size();
+    }
+    
+    /**
+     * Adds a command to the queue
+     *
+     * @param editSession
+     */
+    public boolean addCommandToQueue(String[] split) {
+
+        if( split[0].equals("//commit") ) {
+            return false;
+        }
+        //FIXME NOW - This cannot, and should not be hardcoded.
+        
+        // Destroy any sessions after this undo point
+        while (commandQueuePointer < commandQueue.size()) {
+            commandQueue.remove(commandQueuePointer);
+        }
+        commandQueue.add(split);
+        while (commandQueue.size() > MAX_QUEUE_SIZE) {
+            commandQueue.remove(0);
+        }
+        commandQueuePointer = commandQueue.size();
+        
+        return true;
     }
 
     /**
@@ -716,4 +751,33 @@ public class LocalSession {
     public void setMask(Mask mask) {
         this.mask = mask;
     }
+
+    /**
+     * Gets the command queue
+     * 
+     * @return
+     */
+    public LinkedList<String[]> getCommandQueue() {
+        return commandQueue;
+    }
+
+    /**
+     * Whether or not the preview mode has been enabled
+     * 
+     * @return 
+     */
+    public boolean isPreviewMode() {
+        return previewMode;
+    }
+
+    /**
+     * Enables or disables preview mode
+     * 
+     * @param previewMode 
+     */
+    public void setPreviewMode(boolean previewMode) {
+        this.previewMode = previewMode;
+    }
+    
+    
 }

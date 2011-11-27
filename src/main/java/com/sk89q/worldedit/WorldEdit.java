@@ -1233,7 +1233,13 @@ public class WorldEdit {
             long start = System.currentTimeMillis();
 
             try {
-                commands.execute(split, player, this, session, player, editSession);
+                if(session.isPreviewMode() && session.addCommandToQueue(split)) {
+                    player.printDebug("Command added to queue.");
+                    return true;
+                }
+                else {
+                    commands.execute(split, player, this, session, player, editSession);
+                }
             } catch (CommandPermissionsException e) {
                 player.printError("You don't have permission to do this.");
             } catch (MissingNestedCommandException e) {
