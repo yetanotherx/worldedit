@@ -29,7 +29,7 @@ public class UpdateEvent implements CUIEvent {
     }
 
     public String[] getParameters() {
-        return new String[] { "\u00a7cWARNING: WorldEdit CUI is no longer being updated. Please update to CUIx as soon as possible. (http://bit.ly/wecuix)" };
+        return new String[] { "\u00a7cWARNING: WorldEdit CUI is no longer being updated. Please update to the latest version of WorldEditCUI." };
     }
 
 }
